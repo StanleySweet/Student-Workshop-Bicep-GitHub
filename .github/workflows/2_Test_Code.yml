@@ -1,0 +1,43 @@
+name: 2 - Test Code Bicep (Build)
+
+env:
+  location: "westeurope"
+  pathFile: "./Bicep/Exercice_2"
+  bicepFile: "main.bicep"
+  parameterFile: "deploy.parameters.json"
+
+on:
+  workflow_dispatch
+
+jobs:
+  
+  Test_Template:
+    runs-on: ubuntu-latest    
+    steps:
+
+    - name: Recuperation du repo
+    # uses:  à compléter avec https://github.com/actions/checkout 
+
+    - name: Connexion Azure
+      uses: azure/login@v1
+      with: 
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Lint Bicep File
+      run: |
+        az bicep # à compléter avec https://docs.microsoft.com/en-us/learn/modules/test-bicep-code-using-azure-pipelines/3-lint-validate-bicep-code?pivots=cli
+
+    - name: Validate Bicep File
+      run: |
+        az deployment sub validate \
+          --location ${{ env.location }} \
+          --template-file ${{ env.pathFile }}/${{ env.bicepFile }} \
+          --parameters ${{ env.pathFile }}/${{ env.parameterFile }}
+
+    - name: Creation d'une Issue sur un failed !
+      if: ${{ failure() }}
+      uses: JasonEtco/create-an-issue@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        filename: .github/ISSUE_TEMPLATE_TEST.md  

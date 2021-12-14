@@ -1,0 +1,38 @@
+name: Build et Push
+
+on: 
+  workflow_dispatch:
+
+env:
+  acrName: "acrtauhaaad6fgxw"
+  imageName: "appli0"
+  tagName: "0.0.1"
+
+jobs:
+  Build:
+    runs-on: ubuntu-20.04
+
+    steps:
+
+    - name: Recuperation du repo
+      uses: actions/checkout@v2
+
+    - name: Build Image
+      run: |
+        cd ./Src/ServerApp
+        docker build . -t ${{ env.acrName }}.${{ env.imageName }}:${{ env.tagName }}
+        docker image ls
+
+    - name: Login Azure
+      uses: Azure/login@v1
+      with:        
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+    - name: Login ACR
+      run: |
+        az acr login --name ${{ env.acrName }}
+
+    - name: Push dans ACR
+      run: |
+        docker push ${{ env.acrName }}.${{ env.imageName }}:${{ env.tagName }}
+      

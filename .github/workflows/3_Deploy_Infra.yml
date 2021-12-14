@@ -1,0 +1,68 @@
+name: 3 - Deploiement Infra dans Azure
+
+env:
+  location: "westeurope"
+  pathFile: "./Bicep/Exercice_2"
+  bicepFile: "main.bicep"
+  parameterFile: "deploy.parameters.json"
+
+on:
+  workflow_dispatch
+
+jobs:
+  
+  What-If:
+    runs-on: ubuntu-latest    
+    steps:
+
+    - name: Recuperation du repo
+      uses: actions/checkout@v2
+
+    - name: Connexion Azure
+      uses: azure/login@v1
+      with: 
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: What If Bicep File
+      run: |
+        az deployment sub what-if \
+          --location ${{ env.location }} \
+          --template-file ${{ env.pathFile }}/${{ env.bicepFile }} \
+          --parameters ${{ env.pathFile }}/${{ env.parameterFile }}
+
+    - name: Creation d'une Issue sur un failed !
+      if: ${{ failure() }}
+      uses: JasonEtco/create-an-issue@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        filename: .github/ISSUE_TEMPLATE_DEPLOY.md 
+
+
+
+  Deploy_Template:
+    runs-on: ubuntu-latest
+    needs: What-If
+    environment: 
+      name: Test-Infra   # https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
+    steps:    
+
+      - name: Recuperation du repo
+        uses: actions/checkout@v2
+
+      - name: Connexion Azure
+        uses: azure/login@v1
+        with: 
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploiement Template Bicep
+        run: |
+          # az deployment sub create .... A compléter  cf. https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-cli
+ 
+      - name: Creation d'une Issue sur un failed !
+        if: ${{ failure() }}
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          filename: .github/ISSUE_TEMPLATE_DEPLOY.md 

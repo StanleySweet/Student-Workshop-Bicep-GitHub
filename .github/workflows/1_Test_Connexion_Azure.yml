@@ -1,0 +1,30 @@
+# Nom du Worflow
+name: 1 - Test Connexion Azure
+
+# Déclenchement
+on:
+  workflow_dispatch
+
+
+# Variable d'environnement
+env:
+  LOCATION: westeurope
+
+jobs:
+  
+  build:
+    # Runner
+    runs-on: ubuntu-latest
+    
+    steps:
+      #- name: Connexion Azure   # Nom du 'Step'
+        # utiliser l'action suivante  https://github.com/marketplace/actions/azure-login
+        # insérer ici le code pour faire la connexion à la subscription Azure          
+           
+       # Simple command AZ CLI    
+      - run: |
+          az group list --query "[?location=='${{ env.LOCATION }}']" --output tsv  
+   
+
+
+

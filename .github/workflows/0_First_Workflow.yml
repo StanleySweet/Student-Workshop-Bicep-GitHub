@@ -1,0 +1,30 @@
+# Nom du Workflow
+name: 0 - First Workflow
+
+
+# Déclenchement du Workflow
+on:
+# Déclenchement manuel  
+  workflow_dispatch: 
+
+# Un workflow est composé d'une ou plusieurs tâches qui peuvent être exécutées séquentiellement ou en parallèle.
+jobs:
+  # Ce Workflow contient un seul travail appelé "build".
+  build:
+    # Le type de "runner" sur lequel le travail sera exécuté
+    runs-on: ubuntu-latest
+
+    # Les étapes représentent une séquence de tâches qui seront exécutées dans le job.
+    steps:
+      # Vérifie le dépôt sous $GITHUB_WORKSPACE, afin que les jobs puisse y accéder.
+      - uses: actions/checkout@v2
+
+      # Exécute une seule commande en utilisant le shell runners
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Exécute un ensemble de commandes en utilisant le shell runners
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
