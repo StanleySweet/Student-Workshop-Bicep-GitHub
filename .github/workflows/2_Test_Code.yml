@@ -25,7 +25,7 @@ jobs:
 
     - name: Lint Bicep File
       run: |
-        az bicep build --file deploy/main.bicep
+        az bicep build --file ${{ env.pathFile }}/${{ env.bicepFile }}
 
     - name: Validate Bicep File
       run: |
