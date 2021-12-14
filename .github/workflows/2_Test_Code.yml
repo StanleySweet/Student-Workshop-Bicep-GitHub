@@ -16,7 +16,7 @@ jobs:
     steps:
 
     - name: Recuperation du repo
-    # uses:  à compléter avec https://github.com/actions/checkout 
+      uses: actions/checkout@v2
 
     - name: Connexion Azure
       uses: azure/login@v1
@@ -25,7 +25,7 @@ jobs:
 
     - name: Lint Bicep File
       run: |
-        az bicep # à compléter avec https://docs.microsoft.com/en-us/learn/modules/test-bicep-code-using-azure-pipelines/3-lint-validate-bicep-code?pivots=cli
+        az bicep build --file deploy/main.bicep
 
     - name: Validate Bicep File
       run: |
