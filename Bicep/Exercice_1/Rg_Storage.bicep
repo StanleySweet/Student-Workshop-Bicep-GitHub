@@ -17,8 +17,8 @@ param kindName string
 module rgModule 'Rg.bicep' = {
   name: 'deployRgModule'  
   params: {
-    // à compléter 
-    // à compléter
+    location: location
+    rgName: rgName
   } 
 }
 
@@ -32,7 +32,8 @@ module storageModule 'Storage.bicep' = {
     kindName: kindName
   }
   dependsOn: [
-    // à compléter. cf https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/resource-declaration?tabs=azure-powershell#dependencies
+    
+    rgModule
   ]
 }
 
